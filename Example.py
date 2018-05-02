@@ -1,30 +1,29 @@
+#cwiid is used for wii controller
 import cwiid
 import RPi.GPIO as GPIO
 from time import sleep
 
 GPIO.setmode(GPIO.BOARD)
-
 GPIO.setup(7, GPIO.OUT)
-
 p = GPIO.PWM(7,50)
+
+#start servo at 7.5
 p.start(7.5)
-
-button_delay = 1.0
-
-cycle = 0
 
 print("Press 1 + 2 to pair Wiimote")
 sleep(1)
 
-
+#pairing the wii controller with raspberry pi via bluetooth
 try:
         wii=cwiid.Wiimote()
 except RuntimeError:
         print("Cannot connect to your Wiimote")
         quit()
 
-
+#sets wii mode
 wii.rpt_mode = cwiid.RPT_BTN | cwiid.RPT_ACC
+
+#this while loop checks the wii controller location forever and updates servo location based on coordinates
 while True:
         location = wii.state['acc'][0]
         if location < 110:
